@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Universe for the Most Beautiful Girl 🌙✨</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background: 
+        linear-gradient(rgba(0,0,40,0.3), rgba(0,40,80,0.7)),
+        url('https://images.unsplash.com/photo-1503264116251-35a269479413'),
+        url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+      background-blend-mode: lighten, normal;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      font-family: 'Georgia', serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .moon {
+      position: absolute;
+      top: 50px;
+      right: 100px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 30% 30%, #fff, #ddd 60%, transparent 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+      z-index: 20;
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in-up {
+      animation: fade-in-up 1s ease-out both;
+    }
+
+    .river-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(to top, rgba(0, 0, 30, 0.9), transparent);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .twinkle {
+      animation: twinkle 4s ease-in-out infinite;
+    }
+
+    .music-player {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      padding: 20px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      width: 80px;
+      height: 80px;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    .music-player:hover {
+      width: 320px;
+      box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .music-player.expanded {
+      width: 320px;
+    }
+
+    .player-content {
+      display: flex;
+      align-items: center;
+      width: 320px;
+    }
+
+    .play-btn-container {
+      position: relative;
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .play-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 10px 25px rgba(102, 126, 234, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .play-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+      border-radius: 50%;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 
+        0 15px 30px rgba(102, 126, 234, 0.6),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .play-btn:active {
+      transform: scale(0.95);
+    }
+
+    .play-icon {
+      font-size: 28px;
+      color: white;
+      margin-left: 3px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .pulse-ring {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.3);
+        opacity: 0;
+      }
+    }
+
+    .song-info {
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.4s ease 0.1s;
+      flex: 1;
+    }
+
+    .music-player:hover .song-info,
+    .music-player.expanded .song-info {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .song-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .song-artist {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .progress-container {
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .music-player:hover .progress-container,
+    .music-player.expanded .progress-container {
+      opacity: 1;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+      position: relative;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 5px;
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .moon {
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+      }
+      
+      .music-player {
+        top: 15px;
+        right: 15px;
+        width: 70px;
+        height: 70px;
+      }
+      
+      .play-btn {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .play-icon {
+        font-size: 24px;
+      }
+      
+      .music-player:hover,
+      .music-player.expanded {
+        width: 280px;
+      }
+      
+      .player-content {
+        width: 280px;
+      }
+      
+      .shayari-card {
+        width: 95%;
+        margin-top: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .music-player {
+        width: 60px;
+        height: 60px;
+        padding: 15px;
+      }
+      
+      .play-btn {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .play-icon {
+        font-size: 20px;
+      }
+      
+      .music-player:hover,
+      .music-player.expanded {
+        width: 250px;
+      }
+      
+      .player-content {
+        width: 250px;
+      }
+      
+      .song-title {
+        font-size: 14px;
+      }
+      
+      .song-artist {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen relative">
+
+  <!-- Moon -->
+  <div class="moon floating"></div>
+
+  <!-- Stars Background -->
+  <div class="pointer-events-none fixed inset-0 z-0">
+    <canvas id="stars" class="w-full h-full"></canvas>
+  </div>
+   
+  <!-- Beautiful Music Player -->
+  <!-- <div class="music-player" id="musicPlayer">
+    <div class="player-content">
+      <div class="play-btn-container">
+        <div class="play-btn" id="playBtn">
+          <i class="fas fa-play play-icon" id="playIcon"></i>
+          <i class="fas fa-pause play-icon" id="pauseIcon" style="display: none;"></i>
+          <div class="pulse-ring"></div>
+        </div>
+      </div>
+      
+      <div class="song-info">
+        <div class="song-title">Tere Bina</div>
+        <div class="song-artist">A.R. Rahman</div>
+      </div>
+    </div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <audio id="bgMusic" loop>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+  </div> -->
+
+  <!-- Shayari Card -->
+  <div class="shayari-card relative z-10 w-[92%] sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto px-4 sm:px-6 py-4 sm:py-6 rounded-3xl bg-black/30 border border-white/10 shadow-[0_0_60px_rgba(255,255,255,0.08)] animate-fade-in-up">
+
+    <!-- Profile Picture -->
+    <div class="flex justify-center mb-6">
+      <img src="profile.png" alt="Shaan's Pic"
+           class="w-20 h-20 sm:w-40  sm:h-40 rounded-full border-4 border-white/20 shadow-lg object-cover " />
+    </div>
+
+    <!-- Shayari Text -->
+    <div class="text-base sm:text-lg md:text-[1.2rem] leading-relaxed text-white tracking-wide text-center font-serif" style="text-shadow: 0 0 5px rgba(255,255,255,0.5), 0 0 15px rgba(0,255,255,0.2);">
+    na dekha kabhi 👀<br>
+      aapko haqeeqat mai ,,<br>
+      khwaabon mai fir bhi 💭😌<br>
+      aapka deedar krta hoon..! 🥺❤️<br><br>
+      sochta hu aapko neend se jaag kr,, 🛌💭<br>
+      aur fir subah hone ka intezar krta hoon..! 🌙⏳<br><br>
+      dillagi ki hai bohot 💫<br>
+      aapse dil lagane se pehle,, 💔<br>
+      magar aaj ishq ka izhar krta hoon..! 💌🌹<br><br>
+      jab se aapko jana hai,, 🫶<br>
+      jaana mai bs aap hi se<br>
+      pyar krta hu..! ❤️🥺
+
+      <!-- Author -->
+      <div class="text-right mt-6 text-yellow-300 italic font-bold text-base sm:text-lg drop-shadow-md">
+        ~ Shaan 🌙
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Glow Border Layer -->
+  <div class="absolute inset-0 rounded-3xl border-2 border-transparent bg-gradient-to-br from-pink-300/30 to-indigo-400/20 blur-[2px] opacity-40 pointer-events-none z-0"></div>
+
+  <!-- Floating Hearts -->
+  <div class="pointer-events-none fixed inset-0 z-5" id="heartsContainer"></div>
+
+  <!-- River at Bottom -->
+  <div class="fixed bottom-0 left-0 w-full h-[180px] z-0 overflow-hidden pointer-events-none">
+    <video autoplay loop muted playsinline class="w-full h-full object-cover brightness-[1.1] contrast-[1.05] opacity-80" style="mix-blend-mode: screen;">
+      <source src="https://cdn.pixabay.com/video/2018/08/30/17855-288739938_large.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- River Overlay -->
+  <div class="river-overlay"></div>
+
+  <!-- Stars Script -->
+  <script>
+    // Stars animation
+    const canvas = document.getElementById('stars');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let w, h, stars = [];
+      function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      for (let i = 0; i < 120; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.2 + 0.3,
+          d: Math.random() * 0.5 + 0.2
+        });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        ctx.globalAlpha = 0.8;
+        for (let s of stars) {
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, 2 * Math.PI);
+          ctx.fillStyle = "#fff";
+          ctx.shadowColor = "#fff";
+          ctx.shadowBlur = 8;
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+      function animate() {
+        for (let s of stars) {
+          s.y += s.d;
+          if (s.y > h) {
+            s.y = 0;
+            s.x = Math.random() * w;
+          }
+        }
+        draw();
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    // Music player functionality
+    const bgMusic = document.getElementById('bgMusic');
+    const playBtn = document.getElementById('playBtn');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const progressBar = document.getElementById('progressBar');
+    const musicPlayer = document.getElementById('musicPlayer');
+    
+    let isPlaying = false;
+    
+    // Update progress bar
+    function updateProgress() {
+      if (bgMusic.duration) {
+        const progressPercent = (bgMusic.currentTime / bgMusic.duration) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+      }
+    }
+    
+    // Set up event listeners
+    bgMusic.addEventListener('timeupdate', updateProgress);
+    
+    playBtn.addEventListener('click', function() {
+      if (isPlaying) {
+        bgMusic.pause();
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+      } else {
+        bgMusic.play().catch(e => {
+          console.log("Audio play failed:", e);
+          alert("Please click the play button to start the music. Some browsers require user interaction.");
+        });
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+      }
+      isPlaying = !isPlaying;
+      
+      // Keep player expanded when playing
+      if (isPlaying) {
+        musicPlayer.classList.add('expanded');
+      }
+    });
+
+    // Expand player on hover
+    musicPlayer.addEventListener('mouseenter', function() {
+      musicPlayer.classList.add('expanded');
+    });
+    
+    musicPlayer.addEventListener('mouseleave', function() {
+      if (!isPlaying) {
+        musicPlayer.classList.remove('expanded');
+      }
+    });
+
+    // Floating hearts animation
+    const heartsContainer = document.getElementById('heartsContainer');
+    const heartEmojis = ['❤️', '💖', '💕', '💗', '💓', '💞', '💘'];
+    
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      heart.style.position = 'absolute';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = '100vh';
+      heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+      heart.style.opacity = Math.random() * 0.5 + 0.3;
+      heart.style.zIndex = '5';
+      heart.style.pointerEvents = 'none';
+      heart.style.userSelect = 'none';
+      
+      heartsContainer.appendChild(heart);
+      
+      const animation = heart.animate([
+        { transform: 'translateY(0) rotate(0deg)', opacity: heart.style.opacity },
+        { transform: `translateY(-${Math.random() * 50 + 50}vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+      ], {
+        duration: Math.random() * 5000 + 5000,
+        easing: 'cubic-bezier(0.2, 0, 0.8, 1)'
+      });
+      
+      animation.onfinish = () => {
+        heart.remove();
+      };
+    }
+    
+    // Create hearts periodically
+    setInterval(createHeart, 1000);
+    
+    // Initial hearts
+    for (let i = 0; i < 10; i++) {
+      setTimeout(createHeart, i * 300);
+    }
+  </script>
+</body>
+</html>
